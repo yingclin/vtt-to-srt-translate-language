@@ -35,15 +35,13 @@ namespace VttToSrtTranslateLanguage.Services
 
             for(var i = 0; i < lineCount; i++)
             {
-                if(IsTime(lines[i].Trim()))
+                var (time, isOk) = SubTime.TryParse(lines[i].Trim());
+
+                if (isOk)
                 {
-                    var (time, isOk) = SubTime.TryParse(lines[i].Trim());
-                    var f = time.ToArrowString(',');
-
-
                     if(i + 1 < lineCount && !string.IsNullOrEmpty(lines[i + 1]))
                     {
-                        sentences.Add(new Sentence(lines[i], lines[i + 1]));
+                        sentences.Add(new Sentence(time.ToSrtFormat(), lines[i + 1]));
                         i++;
                     }
                 }

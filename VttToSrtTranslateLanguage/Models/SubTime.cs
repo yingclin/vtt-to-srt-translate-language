@@ -19,13 +19,14 @@ namespace VttToSrtTranslateLanguage.Models
         public int ToSecond { get; private set; }
         public int ToMilliSecond { get; private set; }
 
-
-
         public static (SubTime time, bool isOk) TryParse(string text)
         {
-            // text = "00:53:05,580 --> 00:53:08,170";
+            var time = ParseArrowOrNull(text);
 
-
+            if(time != null)
+            {
+                return (time, true);
+            }
 
             return (null, false);
         }
@@ -106,6 +107,5 @@ namespace VttToSrtTranslateLanguage.Models
 
             return sb.ToString();
         }
-
     }
 }

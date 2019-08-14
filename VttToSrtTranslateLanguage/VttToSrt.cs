@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using VttToSrtTranslateLanguage.Models;
@@ -35,9 +36,13 @@ namespace VttToSrtTranslateLanguage
 
         public void ConvertAll()
         {
+            Console.WriteLine("讀取目錄...");
+
             foreach (var subFile in _reader)
             {
+                Console.WriteLine($"翻譯 {Path.GetFileName(subFile.FullName)}");
                 var translatedSubFile = _translator.TranslateSubFile(subFile);
+                Console.WriteLine($"輸出 {_writer.GetOutFileName(subFile.FullName)}");
                 _writer.Write(translatedSubFile);
             }
         }

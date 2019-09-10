@@ -7,6 +7,7 @@ namespace VttToSrtTranslateLanguage.Models
     class SubFile
     {
         public string FullName { get; set; }
+        public string Message { get; set; }
         public List<Sentence> Sentences { get; set; } = new List<Sentence>();
     }
 }

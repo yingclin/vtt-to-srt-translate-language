@@ -86,7 +86,7 @@ namespace VttToSrtTranslateLanguage.Services
 
         public string GetOutFileName(string sourcePath)
         {
-            return Path.GetFileNameWithoutExtension(sourcePath) + "." + Ext;
+            return Path.GetDirectoryName(sourcePath) + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(sourcePath) + "." + Ext;
         }
     }
 }

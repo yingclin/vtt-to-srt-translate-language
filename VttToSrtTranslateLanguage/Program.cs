@@ -21,8 +21,15 @@ namespace VttToSrtTranslateLanguage
 
         void Run(Context context)
         {
-            var vttToSrt = new VttToSrt(new SubFileReader(context), new SubFileWriter(context), new Translator(context));
-            vttToSrt.ConvertAll();
+            try
+            {
+                var vttToSrt = new VttToSrt(new SubFileReader(context), new SubFileWriter(context), new Translator(context));
+                vttToSrt.ConvertAll();
+            }
+            catch(Exception ex)
+            {
+                Console.Write($"讀取目錄出錯, 原因: {ex.Message}");
+            }
         }
     }
 }

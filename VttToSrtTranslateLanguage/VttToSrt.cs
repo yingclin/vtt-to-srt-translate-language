@@ -36,14 +36,42 @@ namespace VttToSrtTranslateLanguage
 
         public void ConvertAll()
         {
-            Console.WriteLine("讀取目錄...");
-
             foreach (var subFile in _reader)
             {
-                Console.WriteLine($"翻譯 {Path.GetFileName(subFile.FullName)}");
-                var translatedSubFile = _translator.TranslateSubFile(subFile);
-                Console.WriteLine($"輸出 {_writer.GetOutFileName(subFile.FullName)}");
-                _writer.Write(translatedSubFile);
+                var fullName = Path.GetFileName(subFile.FullName);
+
+                Console.WriteLine($"讀取 {fullName}");
+
+                if (!string.IsNullOrEmpty(subFile.Message))
+                {
+                    Console.WriteLine($"讀取 {fullName} 出錯, 原因: {subFile.Message}");
+                    continue;
+                }
+
+                SubFile translatedSubFile = null;
+
+                try
+                {
+                    Console.WriteLine($"翻譯 {fullName}");
+                    translatedSubFile = _translator.TranslateSubFile(subFile);
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"翻譯 {fullName} 出錯, 原因: {ex.Message}");
+                }
+
+                if (translatedSubFile != null)
+                {
+                    try
+                    {
+                        Console.WriteLine($"輸出 {_writer.GetOutFileName(subFile.FullName)}");
+                        _writer.Write(translatedSubFile);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"輸出 {_writer.GetOutFileName(subFile.FullName)} 出錯, 原因: {ex.Message}");
+                    }
+                }
             }
         }
     }

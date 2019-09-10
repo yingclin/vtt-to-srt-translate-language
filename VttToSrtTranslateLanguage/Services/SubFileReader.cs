@@ -28,18 +28,27 @@ namespace VttToSrtTranslateLanguage.Services
 
         public void LoadAll()
         {
+            Console.WriteLine("讀取目錄...");
+
             LoadFilesName(_context.SourceDirectory);
         }
 
         private void LoadFilesName(string path)
         {
-            IEnumerable<string> fileNames = Directory.EnumerateFiles(path, FilePattern);
-
-            _names.AddRange(fileNames.Select(n => Path.Combine(path, n)));
-
-            foreach (var dirName in Directory.EnumerateDirectories(path))
+            try
             {
-                LoadFilesName(Path.Combine(path, dirName));
+                IEnumerable<string> fileNames = Directory.EnumerateFiles(path, FilePattern);
+
+                _names.AddRange(fileNames.Select(n => Path.Combine(path, n)));
+
+                foreach (var dirName in Directory.EnumerateDirectories(path))
+                {
+                    LoadFilesName(Path.Combine(path, dirName));
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"讀取目錄出錯, 原因: {ex.Message}");
             }
         }
 
@@ -53,9 +62,22 @@ namespace VttToSrtTranslateLanguage.Services
 
         private SubFile GetSubFile(string fullName)
         {
-            var lines = File.ReadAllLines(fullName);
+            var ret = new SubFile
+            {
+                FullName = fullName
+            };
 
-            return new SubFile { FullName = fullName, Sentences = _sentences.GetAll(lines) };
+            try
+            {
+                var lines = File.ReadAllLines(fullName);
+                ret.Sentences = _sentences.GetAll(lines);
+            }
+            catch(Exception ex)
+            {
+                ret.Message = ex.Message;
+            }
+
+            return ret;
         }
 
         IEnumerator IEnumerable.GetEnumerator()
